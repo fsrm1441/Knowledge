@@ -1,0 +1,27 @@
+[project]
+name = "langchain-study"
+version = "0.1.0"
+authors = [
+  { name = "Developer", email = "developer@example.com" }
+]
+requires-python = ">=3.13"
+description = "基于LangChain和DeepSeek的知识库问答系统"
+license = { text = "MIT" }
+keywords = ["langchain", "deepseek", "llm", "rag", "knowledge-base"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+readme = "README.md"
+
+[tool.uv.dependencies]
+langchain = "*"
+langchain-openai = "*"
+langchain-community = "*"
+langchain-deepseek = "*"
+python-dotenv = "*"
+sentence-transformers = "*"
+faiss-cpu = "*"
