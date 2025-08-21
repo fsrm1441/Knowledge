@@ -3,14 +3,23 @@ langchain
 langchain-openai
 langchain-community
 langchain-deepseek
+faiss-cpu
 
 # 辅助工具
 python-dotenv  # 用于管理环境变量
 requests  # HTTP请求库
 pydantic  # 数据验证库
 sentence-transformers  # 用于提供文本嵌入模型
+fastapi  # API框架
+uvicorn  # ASGI服务器
+python-multipart  # 处理文件上传
 
-# 可选依赖项
-# 如果需要使用其他模型，取消下面的注释
+# 多模型支持依赖
+# 如果需要使用千问模型，取消下面的注释
 # langchain-huggingface
-# langchain-anthropic
+
+# 如果需要使用Ollama本地模型，取消下面的注释
+# langchain-ollama
+
+# 其他可选模型支持
+# langchain-anthropic  # Claude模型支持

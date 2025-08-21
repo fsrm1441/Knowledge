@@ -8,3 +8,8 @@ __pycache__/
 Thumbs.db
 sample_docs/
 .env
+.bak
+*test*
+word_knowledge_base/
+langchain_study.egg-info/
+faiss_knowledge_base/

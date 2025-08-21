@@ -16,6 +16,21 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 readme = "README.md"
+dependencies = [
+    "faiss-cpu>=1.12.0",
+    "fastapi>=0.116.1",
+    "huggingface-hub>=0.34.4",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.27",
+    "langchain-deepseek>=0.1.4",
+    "langchain-openai>=0.3.30",
+    "pydantic>=2.11.7",
+    "python-dotenv>=1.1.1",
+    "python-multipart>=0.0.20",
+    "requests>=2.32.5",
+    "sentence-transformers>=5.1.0",
+    "uvicorn>=0.35.0",
+]
 
 [tool.uv.dependencies]
 langchain = "*"
@@ -25,3 +40,15 @@ langchain-deepseek = "*"
 python-dotenv = "*"
 sentence-transformers = "*"
 faiss-cpu = "*"
+requests = "*"
+pydantic = "*"
+fastapi = "*"
+uvicorn = "*"
+python-multipart = "*"
+
+# 多模型支持依赖
+# 如需使用千问模型，请取消下面的注释
+# langchain-huggingface = "*"
+
+# 如需使用Ollama本地模型，请取消下面的注释
+# langchain-ollama = "*"
