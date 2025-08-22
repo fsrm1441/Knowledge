@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional
+from contextlib import asynccontextmanager
 import time
 
 # 导入项目中的Word文档处理类
@@ -18,10 +19,36 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """应用生命周期管理"""
+    global knowledge_base
+    # 启动时初始化
+    try:
+        # 输出当前使用的模型信息
+        model_type = os.getenv('MODEL_TYPE', 'deepseek').lower()
+        logger.info(f"当前使用的模型类型: {model_type}")
+        
+        # 初始化知识库
+        knowledge_base = WordKnowledgeProcessor.process_word_document()
+        if knowledge_base:
+            logger.info("知识库实例已成功初始化")
+        else:
+            logger.warning("知识库初始化失败，将在首次请求时尝试重新初始化")
+    except Exception as e:
+        logger.error(f"初始化知识库失败: {str(e)}")
+        # 即使初始化失败，应用仍能启动，后续请求会返回错误
+    
+    yield
+    
+    # 关闭时清理
+    logger.info("应用正在关闭...")
+
 # 创建FastAPI应用
 app = FastAPI(title="RAG知识库问答API", 
               description="一个简单的RAG知识库问答接口，用户只需上传问题即可获取答案",
-              version="1.0.0")
+              version="1.0.0",
+              lifespan=lifespan)
 
 # 配置CORS，允许所有来源
 app.add_middleware(
@@ -47,24 +74,6 @@ class KnowledgeResponse(BaseModel):
     answer: Optional[str] = Field(None, description="问题答案")
     processing_time: Optional[float] = Field(None, description="处理时间(秒)")
 
-# 初始化知识库
-@app.on_event("startup")
-async def startup_event():
-    global knowledge_base
-    try:
-        # 输出当前使用的模型信息
-        model_type = os.getenv('MODEL_TYPE', 'deepseek').lower()
-        logger.info(f"当前使用的模型类型: {model_type}")
-        
-        # 初始化知识库
-        knowledge_base = WordKnowledgeProcessor.process_word_document()
-        if knowledge_base:
-            logger.info("知识库实例已成功初始化")
-        else:
-            logger.warning("知识库初始化失败，将在首次请求时尝试重新初始化")
-    except Exception as e:
-        logger.error(f"初始化知识库失败: {str(e)}")
-        # 即使初始化失败，应用仍能启动，后续请求会返回错误
 
 # API端点
 @app.get("/", tags=["基础接口"])
@@ -150,4 +159,8 @@ async def reload_knowledge_base(knowledge_base_path: str = "word_knowledge_base"
 # 运行服务器
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001, log_level="info")
+    # 从环境变量获取端口，默认为8001，处理空字符串的情况
+    port_str = os.getenv("RAG_API_PORT", "8001")
+    # 如果环境变量存在但为空，使用默认值
+    port = int(port_str) if port_str and port_str.strip() else 8001
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")

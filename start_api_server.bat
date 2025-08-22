@@ -3,6 +3,9 @@
 :: 设置中文显示
 chcp 65001
 
+:: 配置端口环境变量（可选，默认值已在.env中设置）
+:: set API_SERVER_PORT=8000
+
 :: 检查是否有虚拟环境
 if exist .venv\Scripts\activate ( 
     echo 激活虚拟环境...

@@ -101,6 +101,10 @@ python api_server.py
 
 # 方法2：使用批处理脚本（Windows环境）
 start_api_server.bat
+
+# 方法3：使用shell脚本（Linux/Mac环境）
+chmod +x start_api_server.sh
+./start_api_server.sh
 ```
 
 API服务启动后，可以访问以下地址查看API文档：
@@ -108,6 +112,8 @@ API服务启动后，可以访问以下地址查看API文档：
 ```
 http://localhost:8000/docs
 ```
+
+> 注意：API服务的端口可以在`.env`文件中通过`API_SERVER_PORT`配置，默认为8000。
 
 ### API端点说明
 
@@ -139,6 +145,10 @@ python api_rag_knowledge.py
 
 # 方法2：使用批处理脚本（Windows环境）
 start_rag_api.bat
+
+# 方法3：使用shell脚本（Linux/Mac环境）
+chmod +x start_rag_api.sh
+./start_rag_api.sh
 ```
 
 RAG API服务启动后，可以访问以下地址查看API文档：
@@ -146,6 +156,8 @@ RAG API服务启动后，可以访问以下地址查看API文档：
 ```
 http://localhost:8001/docs
 ```
+
+> 注意：RAG API服务的端口可以在`.env`文件中通过`RAG_API_PORT`配置，默认为8001。
 
 RAG API提供了以下主要端点：
 

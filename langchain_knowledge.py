@@ -16,7 +16,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains import RetrievalQA
 # 在文件顶部添加必要的导入
-from langchain import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 # 导入不同模型的支持库
 # 首先获取并标准化模型类型

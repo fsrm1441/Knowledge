@@ -13,6 +13,7 @@ sentence-transformers  # 用于提供文本嵌入模型
 fastapi  # API框架
 uvicorn  # ASGI服务器
 python-multipart  # 处理文件上传
+docx2txt  # 用于提取Word文档文本和图像
 
 # 多模型支持依赖
 # 如果需要使用千问模型，取消下面的注释

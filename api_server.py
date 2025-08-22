@@ -3,6 +3,7 @@ import os
 import logging
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from pydantic import BaseModel, Field
 from typing import List, Optional
 import tempfile
@@ -19,10 +20,29 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """应用生命周期管理"""
+    global knowledge_base
+    # 启动时初始化
+    try:
+        # 创建知识库实例
+        knowledge_base = DeepSeekKnowledgeBase()
+        logger.info("知识库实例已成功初始化")
+    except Exception as e:
+        logger.error(f"初始化知识库失败: {str(e)}")
+        # 即使初始化失败，应用仍能启动，后续请求会返回错误
+    
+    yield
+    
+    # 关闭时清理
+    logger.info("应用正在关闭...")
+
 # 创建FastAPI应用
 app = FastAPI(title="LangChain多模型知识库API", 
               description="基于FastAPI的知识库问答系统接口，支持多种大语言模型",
-              version="1.0.0")
+              version="1.0.0",
+              lifespan=lifespan)
 
 # 配置CORS，允许所有来源
 app.add_middleware(
@@ -64,17 +84,6 @@ class KnowledgeBaseResponse(BaseModel):
     message: str = Field(..., description="操作结果消息")
     data: Optional[dict] = Field(None, description="操作结果数据")
 
-# 初始化知识库
-@app.on_event("startup")
-async def startup_event():
-    global knowledge_base
-    try:
-        # 创建知识库实例
-        knowledge_base = DeepSeekKnowledgeBase()
-        logger.info("知识库实例已成功初始化")
-    except Exception as e:
-        logger.error(f"初始化知识库失败: {str(e)}")
-        # 即使初始化失败，应用仍能启动，后续请求会返回错误
 
 # API端点
 @app.get("/", tags=["基础接口"])
@@ -306,4 +315,12 @@ async def upload_and_query_knowledge_base(files: List[UploadFile] = File(...), q
 # 运行服务器
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    # 从环境变量获取端口，默认为8000，处理空字符串的情况
+    port_str = os.getenv("API_SERVER_PORT", "8000")
+    try:
+        port = int(port_str) if port_str else 8000
+    except ValueError:
+        port = 8000
+        logger.warning(f"无效的端口配置 '{port_str}'，使用默认端口 8000")
+    
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
