@@ -34,9 +34,10 @@ RUN cp .env.temp .env && \
 # 暴露API端口
 EXPOSE 8000
 EXPOSE 8001
+EXPOSE 8002
 
 # 设置环境变量
 ENV PYTHONUNBUFFERED=1
 
-# 运行两个API服务的脚本
-CMD ["/bin/bash", "-c", "python api_server.py & python api_rag_knowledge.py"]
+# 运行三个API服务的脚本
+CMD ["/bin/bash", "-c", "python api_server.py & python api_rag_knowledge.py & python api_feishu_knowledge.py"]

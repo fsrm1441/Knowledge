@@ -31,6 +31,7 @@ dependencies = [
     "sentence-transformers>=5.1.0",
     "uvicorn>=0.35.0",
     "docx2txt>=0.9",  # 用于提取Word文档文本和图像
+    "feishu-sdk-python>=0.0.1",  # 飞书官方Python SDK，用于更方便地调用飞书API
 ]
 
 [tool.uv.dependency-groups]
@@ -48,6 +49,7 @@ main = [
     "uvicorn==*",
     "python-multipart==*",
     "docx2txt==*",  # 用于提取Word文档文本和图像
+    "feishu-sdk-python==*",  # 飞书官方Python SDK，用于更方便地调用飞书API
 ]
 
 # 多模型支持依赖

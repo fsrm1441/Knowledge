@@ -2,7 +2,6 @@
 langchain
 langchain-openai
 langchain-community
-langchain-deepseek
 faiss-cpu
 
 # 辅助工具
@@ -24,3 +23,6 @@ docx2txt  # 用于提取Word文档文本和图像
 
 # 其他可选模型支持
 # langchain-anthropic  # Claude模型支持
+
+# 飞书API支持
+feishu-sdk-python  # 飞书官方Python SDK，用于更方便地调用飞书API
